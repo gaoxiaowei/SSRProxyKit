@@ -147,19 +147,35 @@ void ssr_update_token(const char* ssr_token){
              error_=error1;
              dispatch_group_leave(group);
         }];
+
+        //等待上面的任务完成
+        dispatch_group_wait(group, DISPATCH_TIME_FOREVER);
         
         dispatch_group_enter(group);
         [self startHttpProxy:^(int port, NSError * _Nonnull error2) {
             error_=error2;
             dispatch_group_leave(group);
         }];
-        
+
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
             completion(error_);
         });
     });
-    
+
 }
+
+//- (void)startWithCompletion:(void (^)(NSError *error))completion {
+//    NSLog(@"SSRProxyManager->startWithCompletion");
+//    [self startShadowsocks:^(int port, NSError * _Nullable error1) {
+//        if(error1){
+//            completion(error1);
+//        }else{
+//            [self startHttpProxy:^(int port, NSError * _Nonnull error2) {
+//                completion(error2);
+//            }];
+//        }
+//    }];
+//}
 
 -(void)stopWithCompletion:(void (^)(NSError *error))completion{
     NSLog(@"SSRProxyManager->stopWithCompletion");
