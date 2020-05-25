@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		03202C35247BA45B000481F1 /* SSRProxyKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202C33247BA45B000481F1 /* SSRProxyKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		03202C58247BA625000481F1 /* SSRProxyManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202C56247BA625000481F1 /* SSRProxyManager.h */; };
+		03202C58247BA625000481F1 /* SSRProxyManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202C56247BA625000481F1 /* SSRProxyManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03202C59247BA625000481F1 /* SSRProxyManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 03202C57247BA625000481F1 /* SSRProxyManager.m */; };
 		03202C69247BA8EB000481F1 /* ssrLocal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03202C4F247BA54D000481F1 /* ssrLocal.framework */; };
 		03202C6A247BA8EB000481F1 /* ssrLocal.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 03202C4F247BA54D000481F1 /* ssrLocal.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -16,10 +16,10 @@
 		03202C6D247BA8F3000481F1 /* ShadowPath.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 03202C42247BA53C000481F1 /* ShadowPath.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		03202C70247BA952000481F1 /* Profile.m in Sources */ = {isa = PBXBuildFile; fileRef = 03202C6E247BA952000481F1 /* Profile.m */; };
 		03202C71247BA952000481F1 /* Profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202C6F247BA952000481F1 /* Profile.h */; };
-		03202C98247BB238000481F1 /* Potatso.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202C92247BB237000481F1 /* Potatso.h */; };
+		03202C98247BB238000481F1 /* Potatso.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202C92247BB237000481F1 /* Potatso.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03202C99247BB238000481F1 /* Potatso.m in Sources */ = {isa = PBXBuildFile; fileRef = 03202C97247BB237000481F1 /* Potatso.m */; };
 		03202CAA247BBB4C000481F1 /* JSONUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 03202CA8247BBB4C000481F1 /* JSONUtils.m */; };
-		03202CAB247BBB4C000481F1 /* JSONUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202CA9247BBB4C000481F1 /* JSONUtils.h */; };
+		03202CAB247BBB4C000481F1 /* JSONUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202CA9247BBB4C000481F1 /* JSONUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03202CAE247BBCAF000481F1 /* TunnelError.m in Sources */ = {isa = PBXBuildFile; fileRef = 03202CAC247BBCAF000481F1 /* TunnelError.m */; };
 		03202CAF247BBCAF000481F1 /* TunnelError.h in Headers */ = {isa = PBXBuildFile; fileRef = 03202CAD247BBCAF000481F1 /* TunnelError.h */; };
 /* End PBXBuildFile section */
@@ -173,9 +173,9 @@
 			files = (
 				03202C71247BA952000481F1 /* Profile.h in Headers */,
 				03202C98247BB238000481F1 /* Potatso.h in Headers */,
+				03202CAB247BBB4C000481F1 /* JSONUtils.h in Headers */,
 				03202C58247BA625000481F1 /* SSRProxyManager.h in Headers */,
 				03202CAF247BBCAF000481F1 /* TunnelError.h in Headers */,
-				03202CAB247BBB4C000481F1 /* JSONUtils.h in Headers */,
 				03202C35247BA45B000481F1 /* SSRProxyKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -433,6 +433,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_dylib;
 				PRODUCT_BUNDLE_IDENTIFIER = co.innovative.SSRProxyKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
@@ -457,6 +458,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACH_O_TYPE = mh_dylib;
 				PRODUCT_BUNDLE_IDENTIFIER = co.innovative.SSRProxyKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
