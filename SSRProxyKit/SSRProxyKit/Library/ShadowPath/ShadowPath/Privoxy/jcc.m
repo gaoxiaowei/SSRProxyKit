@@ -140,6 +140,8 @@ int urls_rejected = 0;     /* total nr of urls rejected */
 int g_terminate = 0;
 #endif
 
+bool g_quit =false;
+
 static int client_protocol_is_unsupported(const struct client_state *csp, char *req);
 static jb_err get_request_destination_elsewhere(struct client_state *csp, struct list *headers);
 static jb_err get_server_headers(struct client_state *csp);
@@ -3220,6 +3222,7 @@ void shadowpath_destroy(){
  #ifdef IS_USE_MEMFILE
     destroy_mem_file();
  #endif
+    g_quit=true;
     
 }
 
@@ -3409,7 +3412,7 @@ static void listen_loop(shadowpath_cb cb, void *data)
     struct client_state *csp = NULL;
     jb_socket bfds[MAX_LISTENING_SOCKETS];
     unsigned int active_threads = 0;
-
+    g_quit =false;
     config = load_config();
 
     #ifdef FEATURE_CONNECTION_SHARING
@@ -3435,6 +3438,9 @@ static void listen_loop(shadowpath_cb cb, void *data)
         /*
         * Free data that was used by died threads
         */
+        if(g_quit){
+            break;
+        }
         active_threads = sweep();
 
         csp_list = (struct client_states *)zalloc(sizeof(*csp_list));

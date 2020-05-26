@@ -10,13 +10,24 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef enum : NSUInteger {
+    SSRProxyStatusDisconnected,
+    SSRProxyStatusDisconnecting,
+    SSRProxyStatusConnecting,
+    SSRProxyStatusConnected
+} SSRProxyStatus;
+
+NSString*const kProxyStausNotificationName =@"com.ssr.prxoy.status.notification";
+
 typedef void(^HttpProxyCompletion)(int port, NSError *error);
 typedef void(^ShadowsocksProxyCompletion)(int port, NSError *_Nullable error);
+
 
 @interface SSRProxyManager : NSObject
 
 @property (nonatomic, readonly) int socksProxyPort;
 @property (nonatomic, readonly) int httpProxyPort;
+@property (nonatomic, assign,readonly) SSRProxyStatus     status;
 
 + (SSRProxyManager *)sharedManager;
 

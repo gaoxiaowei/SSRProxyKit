@@ -10,4 +10,5 @@ int ssr_Local_listen_socket_fd(struct ssr_local_state *state);
 
 void ssr_local_update_token(const char* ssr_token);
 void ssr_token_safe_destroy();
+void ssr_quit();
 #endif // __LOCAL_API_H__

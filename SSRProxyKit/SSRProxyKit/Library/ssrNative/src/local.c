@@ -1764,11 +1764,11 @@ struct ssr_local_state {
 int ssr_Local_listen_socket_fd(struct ssr_local_state *state) {
     return state->listen_fd;
 }
-
+uv_loop_t *loop;
 int ssr_local_main_loop(const struct server_config *config, void(*feedback_state)(struct ssr_local_state *state, void *p), void *p) {
     struct ss_host_port tunnel_addr = { NULL, NULL };
     struct listener_t *listener;
-    uv_loop_t *loop;
+    
     uv_signal_t sigint_watcher;
     uv_signal_t sigterm_watcher;
     struct listener_t *listen_ctx;
@@ -1992,6 +1992,9 @@ void ssr_local_update_token(const char* ssr_token){
 
 }
 
+void ssr_quit(){
+    loop->stop_flag=1;
+}
 void ssr_token_safe_destroy(){
     safe_free(_ssr_token);
 }

@@ -21,6 +21,18 @@
 #endif
 
 
+#define SAFE_BLOCK(block, ...) if((block)) { block(__VA_ARGS__); }
+#define SAFE_BLOCK_IN_MAIN_QUEUE(block, ...) if((block)) {\
+if ([NSThread isMainThread]) {\
+block(__VA_ARGS__);\
+}\
+else {\
+dispatch_async(dispatch_get_main_queue(), ^{\
+block(__VA_ARGS__);\
+});\
+}\
+}
+
 @interface SSRProxyManager()
 {
     int _shadowsocksProxyPort;
@@ -31,6 +43,7 @@
     
 }
 @property (nonatomic, strong) dispatch_queue_t   taskQueue;
+@property (nonatomic, assign) SSRProxyStatus     status;
 
 - (void)onHttpProxyCallback: (int)fd;
 - (void)onShadowsocksCallback:(int)fd;
@@ -109,6 +122,7 @@ void ssr_main_loop(Profile *profile, unsigned short listenPort, void *context) {
 }
 
 void ssr_stop(void) {
+    ssr_quit();
     ssr_token_safe_destroy();
 }
 
@@ -133,6 +147,7 @@ void ssr_update_token(const char* ssr_token){
     self =[super init];
     if(self){
        self.taskQueue = dispatch_queue_create("com.ssr.proxy.queue", DISPATCH_QUEUE_SERIAL);
+       self.status =SSRProxyStatusDisconnected;
     }
     return self;
 }
@@ -140,6 +155,8 @@ void ssr_update_token(const char* ssr_token){
 - (void)startWithCompletion:(void (^)(NSError *error))completion {
     NSLog(@"SSRProxyManager->startWithCompletion");
     dispatch_async(self.taskQueue, ^{
+        self.status =SSRProxyStatusConnecting;
+        [self notifyStaus:SSRProxyStatusConnecting];
         dispatch_group_t group = dispatch_group_create();
         dispatch_group_enter(group);
         __block NSError*error_ =nil;
@@ -158,7 +175,9 @@ void ssr_update_token(const char* ssr_token){
         }];
 
         dispatch_group_notify(group, dispatch_get_main_queue(), ^{
-            completion(error_);
+            SAFE_BLOCK(completion,error_);
+            self.status =SSRProxyStatusConnected;
+            [self notifyStaus:SSRProxyStatusConnected];
         });
     });
 
@@ -167,12 +186,15 @@ void ssr_update_token(const char* ssr_token){
 -(void)stopWithCompletion:(void (^)(NSError *error))completion{
     NSLog(@"SSRProxyManager->stopWithCompletion");
     dispatch_async(self.taskQueue, ^{
+        self.status =SSRProxyStatusDisconnecting;
+        [self notifyStaus:SSRProxyStatusDisconnecting];
         [self stopHttpProxy];
         [self stopShadowsocks];
         dispatch_async(dispatch_get_main_queue(), ^{
-             completion(nil);
+             self.status =SSRProxyStatusDisconnected;
+             [self notifyStaus:SSRProxyStatusDisconnected];
+             SAFE_BLOCK(completion,nil);
         });
-       
     });
 }
 
@@ -185,6 +207,17 @@ void ssr_update_token(const char* ssr_token){
      });
 }
 
+-(void)notifyStaus:(SSRProxyStatus)status{
+    if ([NSThread isMainThread]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kProxyStausNotificationName object:@(status)];
+    }
+    else{
+        dispatch_async(dispatch_get_main_queue(), ^{
+              [[NSNotificationCenter defaultCenter] postNotificationName:kProxyStausNotificationName object:@(status)];
+        });
+    }
+
+}
 # pragma mark - Shadowsocks
 
 - (void)startShadowsocks: (ShadowsocksProxyCompletion)completion {
